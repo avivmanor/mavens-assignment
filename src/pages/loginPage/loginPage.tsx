@@ -1,19 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState } from "react";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import { Box } from "@mui/joy";
 import { WrapperBox } from "./loginPage.style";
-import { GameContext } from "../../context/gameContext";
 import Alert from "@mui/joy/Alert";
 import axios from "axios";
 
-const LoginPage = () => {
+const LoginPage = ({ setUsername }: any) => {
   const apiUrl = "http://localhost:8000/users";
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [typedUser, setTypedUser] = useState("");
-  const { username, setUsername } = useContext(GameContext);
 
   const handleClick = async () => {
     try {

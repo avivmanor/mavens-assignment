@@ -1,17 +1,16 @@
-import { useContext, useState } from "react";
-import { GameContext } from "../../context/gameContext";
+import { useState } from "react";
 import LoginPage from "../loginPage/loginPage";
 import { GamePage } from "../gamePage/gamePage";
 
 export const RoutingPage = () => {
-  // TODO: change useContext to useState:
-  // const [username, setUsername] = useState('');
-  const { username, setUsername } = useContext(GameContext);
+  const [username, setUsername] = useState("");
 
   return (
     <>
       {!username ? (
-        <LoginPage></LoginPage>
+        <LoginPage
+          setUsername={(username: string) => setUsername(username)}
+        ></LoginPage>
       ) : (
         <GamePage username={username}></GamePage>
       )}

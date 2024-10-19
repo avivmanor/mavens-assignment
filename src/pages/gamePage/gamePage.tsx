@@ -1,20 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { GameContext } from "../../context/gameContext";
+import React, { useEffect, useState } from "react";
 import { FeedbackAlert } from "../../components/feedback/feedbackAlert";
 import { Alert, Box } from "@mui/joy";
-import {
-  FeedbackMessageEnum,
-  FeedbackTypeEnum,
-  GameContextType,
-  GameModeEnum,
-} from "../../context/gameContext.interface";
 import { AlertWrapper, Circle, HeaderWrapper } from "./gamePage.style";
 import axios from "axios";
+import {
+  Feedback,
+  FeedbackMessageEnum,
+  FeedbackTypeEnum,
+} from "../../interfaces/feedback.interface";
+import { GameModeEnum } from "../../interfaces/game-mode.enum";
 
 export const GamePage = ({ username }: { username: string }) => {
+  const initialFeedback: Feedback = {
+    feedbackType: FeedbackTypeEnum.NONE,
+    message: FeedbackMessageEnum.NONE,
+  };
+
   const apiUrl = "http://localhost:8000/users";
-  const { gameMode, setGameMode, feedback, setFeedback } =
-    useContext<GameContextType>(GameContext);
+  const [gameMode, setGameMode] = useState<GameModeEnum>(GameModeEnum.LOADING);
+  const [feedback, setFeedback] = useState<Feedback>(initialFeedback);
   const [tooSoonFlag, setTooSoonFlag] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
