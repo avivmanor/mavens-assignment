@@ -1,5 +1,5 @@
 import Alert from "@mui/joy/Alert";
-import { FeedbackTypeEnum } from "../../context/gameContext.interface";
+import { FeedbackTypeEnum } from "../../interfaces/feedback.interface";
 
 export const FeedbackAlert = ({ feedbackToShow }: any) => {
   const colorType =
