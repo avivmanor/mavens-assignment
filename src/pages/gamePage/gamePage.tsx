@@ -34,31 +34,9 @@ export const GamePage = ({ username }: { username: string }) => {
 
   const handleReaction = async (event: KeyboardEvent, timeout?: any) => {
     if (gameMode === GameModeEnum.LEFT) {
-      if (event.key === "a") {
-        setFeedback({
-          feedbackType: FeedbackTypeEnum.SUCCESS,
-          message: FeedbackMessageEnum.NONE,
-        });
-        incrementSteps();
-      } else {
-        setFeedback({
-          feedbackType: FeedbackTypeEnum.MISTAKE,
-          message: FeedbackMessageEnum.WRONG_KEY,
-        });
-      }
+      handleFeedback("a", event.key);
     } else if (gameMode === GameModeEnum.RIGHT) {
-      if (event.key === "l") {
-        setFeedback({
-          feedbackType: FeedbackTypeEnum.SUCCESS,
-          message: FeedbackMessageEnum.NONE,
-        });
-        incrementSteps();
-      } else {
-        setFeedback({
-          feedbackType: FeedbackTypeEnum.MISTAKE,
-          message: FeedbackMessageEnum.WRONG_KEY,
-        });
-      }
+      handleFeedback("l", event.key);
     } else {
       setFeedback({
         feedbackType: FeedbackTypeEnum.MISTAKE,
@@ -67,14 +45,29 @@ export const GamePage = ({ username }: { username: string }) => {
       setTooSoonFlag((prev) => prev + 1);
     }
   };
+
+  const handleFeedback = (expectedKey: string, actualKey: string) => {
+    if (actualKey === expectedKey) {
+      setFeedback({
+        feedbackType: FeedbackTypeEnum.SUCCESS,
+        message: FeedbackMessageEnum.NONE,
+      });
+      incrementSteps();
+    } else {
+      setFeedback({
+        feedbackType: FeedbackTypeEnum.MISTAKE,
+        message: FeedbackMessageEnum.WRONG_KEY,
+      });
+    }
+  };
+
   // Get the random delay for the loading state:
   const t = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
 
   useEffect(() => {
     window.addEventListener("keydown", handleReaction);
     if (gameMode === GameModeEnum.LOADING) {
-      const answerTimeout = setTimeout(() => {
-        console.log(feedback.message);
+      setTimeout(() => {
         if (feedback.message !== FeedbackMessageEnum.TOO_SOON) {
           setGameMode(
             Math.random() < 0.5 ? GameModeEnum.LEFT : GameModeEnum.RIGHT
@@ -82,7 +75,7 @@ export const GamePage = ({ username }: { username: string }) => {
         }
       }, t);
     } else {
-      const answerTimeout = setTimeout(() => {
+      setTimeout(() => {
         setGameMode(GameModeEnum.LOADING);
       }, 1000);
 

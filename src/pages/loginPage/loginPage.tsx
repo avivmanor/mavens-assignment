@@ -22,7 +22,6 @@ const LoginPage = ({ setUsername }: any) => {
     } catch (err: any) {
       setError(err.message);
     }
-    return;
   };
 
   return (
