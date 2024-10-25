@@ -32,6 +32,16 @@ export const GamePage = ({ username }: { username: string }) => {
     }
   };
 
+  const handleModeChange = () => {
+    setGameMode((currentMode) =>
+      currentMode === GameModeEnum.LOADING
+        ? Math.random() < 0.5
+          ? GameModeEnum.LEFT
+          : GameModeEnum.RIGHT
+        : GameModeEnum.LOADING
+    );
+  };
+
   const handleReaction = async (event: KeyboardEvent, timeout?: any) => {
     if (gameMode === GameModeEnum.LEFT) {
       handleFeedback("a", event.key);
@@ -61,32 +71,24 @@ export const GamePage = ({ username }: { username: string }) => {
     }
   };
 
-  // Get the random delay for the loading state:
-  const t = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
-
   useEffect(() => {
+    const t =
+      gameMode === GameModeEnum.LOADING
+        ? Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000
+        : 1000;
     window.addEventListener("keydown", handleReaction);
-    if (gameMode === GameModeEnum.LOADING) {
-      setTimeout(() => {
-        if (feedback.message !== FeedbackMessageEnum.TOO_SOON) {
-          setGameMode(
-            Math.random() < 0.5 ? GameModeEnum.LEFT : GameModeEnum.RIGHT
-          );
-        }
-      }, t);
-    } else {
-      setTimeout(() => {
-        setGameMode(GameModeEnum.LOADING);
-      }, 1000);
+    const timer = setTimeout(handleModeChange, t);
 
-      // A fallback in case no key was pressed:
+    // A fallback in case no key was pressed:
+    if (gameMode !== GameModeEnum.LOADING)
       setFeedback({
         feedbackType: FeedbackTypeEnum.MISTAKE,
         message: FeedbackMessageEnum.TOO_LATE,
       });
-    }
+
     return () => {
       window.removeEventListener("keydown", handleReaction);
+      clearTimeout(timer);
     };
   }, [gameMode, tooSoonFlag]);
 
